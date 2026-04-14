@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "683290115407",
+    "firebase_url": "https://latihan-c5e2b-default-rtdb.firebaseio.com",
+    "project_id": "latihan-c5e2b",
+    "storage_bucket": "latihan-c5e2b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683290115407:android:b361b72d865dfe85aad93a",
+        "android_client_info": {
+          "package_name": "com.example.mdp_gold"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSGIbKh55bn7ugQ43lJSfIY51dooGOmsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
