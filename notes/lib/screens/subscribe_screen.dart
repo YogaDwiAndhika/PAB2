@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/fcm_service.dart';
+import '../l10n/app_localizations.dart';
 
 class SubscribeScreen extends StatefulWidget {
   const SubscribeScreen({Key? key}) : super(key: key);
@@ -48,19 +49,20 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
 
   Future<void> _toggleSubscription(String topic) async {
     final isSubscribed = _subscribedTopics.contains(topic);
+    final l10n = AppLocalizations.of(context)!;
     
     if (isSubscribed) {
       await _fcmService.unsubscribeFromTopic(topic);
       setState(() {
         _subscribedTopics.remove(topic);
       });
-      _showSnackBar('Berhenti berlangganan dari topik: $topic');
+      _showSnackBar(l10n.unsubscribedFromTopic(topic));
     } else {
       await _fcmService.subscribeToTopic(topic);
       setState(() {
         _subscribedTopics.add(topic);
       });
-      _showSnackBar('Berhasil berlangganan ke topik: $topic');
+      _showSnackBar(l10n.subscribedToTopic(topic));
     }
     
     await _saveSubscribedTopics();
@@ -74,11 +76,12 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
 
   void _subscribeCustomTopic() {
     final topic = _topicController.text.trim();
+    final l10n = AppLocalizations.of(context)!;
     if (topic.isNotEmpty) {
       if (!_subscribedTopics.contains(topic)) {
         _toggleSubscription(topic);
       } else {
-        _showSnackBar('Sudah berlangganan ke topik: $topic');
+        _showSnackBar(l10n.alreadySubscribed(topic));
       }
       _topicController.clear();
       FocusScope.of(context).unfocus();
@@ -87,20 +90,21 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final otherTopics = _subscribedTopics.where((t) => !_suggestedTopics.contains(t)).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Langganan Topik'),
+        title: Text(l10n.subscribeScreenTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Tambah Topik Kustom',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.customTopicTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
@@ -108,10 +112,10 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                 Expanded(
                   child: TextField(
                     controller: _topicController,
-                    decoration: const InputDecoration(
-                      hintText: 'Misal: hiburan, game',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    decoration: InputDecoration(
+                      hintText: l10n.customTopicHint,
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     ),
                   ),
                 ),
@@ -121,14 +125,14 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text('Langganan'),
+                  child: Text(l10n.subscribe),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Saran Topik',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.suggestedTopics,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ListView.builder(
@@ -153,9 +157,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
             ),
             if (otherTopics.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Text(
-                'Topik Lainnya',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                l10n.otherTopics,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Expanded(
