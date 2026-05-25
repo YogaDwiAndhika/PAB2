@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'web_notification_stub.dart' if (dart.library.html) 'web_notification.dart';
 
 class FcmService {
   static final FcmService _instance = FcmService._internal();
@@ -125,6 +126,16 @@ class FcmService {
         // On Web, foreground messages are handled by the browser
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           debugPrint('Foreground message on web: ${message.notification?.title}');
+          if (message.notification != null) {
+            showWebNotification(
+              message.notification!.title ?? 'Notifikasi Baru',
+              message.notification!.body ?? '',
+            );
+          } else if (message.data.isNotEmpty) {
+            final title = message.data['title'] ?? 'Catatan Baru';
+            final body = message.data['body'] ?? 'Cek aplikasi Anda';
+            showWebNotification(title, body);
+          }
         });
       }
 
